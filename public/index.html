@@ -1,10 +1,56 @@
 <!doctype html>
 <html>
 <head>
-    <title></title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Train+One&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Views</title>
 </head>
 <body>
+    <div id="banner">
+        <img id="bannerimage" src="./images/banner.jpg">
+        <div id="headlinecontainer">
+    <h1 id="headline">IMG SRC</h1>
+    </div>
+    </div>
+    <div id="main">
+         
+        <div id="upload">
+            <form>
+                <div id="textinputs">
+                    <input v-model='title' type ="text" name='title' placeholder="Title">
+            <!-- the value of v-model is linked to the properties in our data object -->
+                    <input v-model='description' type ="text" name='description' placeholder="Description">
+                    <input v-model='username' type ="text" name ='username' placeholder="Username">
+                </div>
+                <div id="fileinput">
+                
+                <div id="browsebutton">
+                <label id="choosefile" for='inputfile'>
+                    <img class="icon" src="./images/photo.png">
+                </label>
+                <input @change='handleChange' id='inputfile' class="inputfile" type ="file" name ='file' accept='image/*'>
+                </div>
+            <!-- When there is a change in the file input field, run the function handleChange from out data -->
+                </div>
+            <button @click.prevent='handleClick'><img class="icon" src="./images/send.png"></button>
+            <!-- click.prevent is the equivalent of e.preventDefault() -->
+            </form>
+        </div>
+        <!-- This contains our Vue instance -->
+        <div id="imagegrid">    
+            
+            <div class="card" v-for='image in images' :key='image.id'>
+                <img class="image" :src =image.url>
+                <div class="info"><p>{{image.title}}</p></div>
+            </div>
+        </div>
+
+        
+
+    </div>
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 </html>

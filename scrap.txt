@@ -1,0 +1,8 @@
+<ul>
+            <li v-for='city in cities' :key='city.id' @click='myFunction(city.name)'>{{ city.name }}, {{ city.country }}</li>
+            <!-- the ":key" property tells vue to optimise its rendering -->
+            <!-- it will prevent Vue rendering until it is ready to show accurate data -->
+            <!-- key must be passed a unique value. The colon BINDS the key to the data object -->
+            <!-- @click is the Vue way of doing event listeners -->
+            <!-- It looks in methods for the function -->
+        </ul>
