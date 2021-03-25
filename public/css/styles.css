@@ -10,6 +10,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow-x: hidden;
 }
 
 #main {
@@ -43,6 +44,11 @@ body {
     padding-right: 5%;
 }
 
+.popup {
+    margin-left: 3%;
+    color: black;
+}
+
 .info > p {
     justify-self: flex-end;
     font-weight: 500;
@@ -50,8 +56,10 @@ body {
 
 .image {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 300px;
     object-fit: cover;
+    border: 1px solid white;
+    border-radius: 5px;
 }
 
 ul {
@@ -74,9 +82,39 @@ button,
     border: none;
 }
 
-.icon {
-    width: 40px;
+#fileicon {
+    min-width: 50px;
+    max-width: 50px;
     cursor: pointer;
+    transition: 400ms;
+
+    padding: 5px;
+}
+
+.sendicon {
+    min-width: 50px;
+    max-width: 50px;
+    cursor: pointer;
+    transition: 400ms;
+    border-radius: 50%;
+}
+
+.file-chosen {
+    background-color: rgb(3, 172, 3);
+    border-radius: 50%;
+}
+
+.close {
+    width: 20px;
+}
+
+.icon:hover {
+    transform: translateY(-5px);
+    transition: 200ms;
+}
+.sendicon:hover {
+    transform: translateY(-5px);
+    transition: 200ms;
 }
 
 #browsebutton {
@@ -113,15 +151,15 @@ form {
     width: 100%;
     top: 0;
     position: relative;
-    margin-bottom: 2rem;
 }
 
 #bannerimage {
     object-fit: cover;
-    max-height: 350px;
+    max-height: 200px;
     position: relative;
     left: 0px;
 }
+
 #headlinecontainer {
     text-align: center;
 }
@@ -130,12 +168,60 @@ form {
     font-family: "Train One", cursive;
     text-align: center;
     margin-bottom: 2rem;
-    font-size: 4.5rem;
+    font-size: 3.5rem;
     color: white;
     position: absolute;
+    z-index: 0;
+    top: 45%;
+    left: 90px;
+}
+
+#info-box {
+    display: flex;
+    width: 90%;
+    height: 90%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    background-color: black;
     z-index: 4;
-    top: 35%;
-    left: 218px;
+    flex-direction: column;
+}
+
+.image-open {
+    max-width: 100%;
+    max-height: auto;
+    object-fit: contain;
+    padding-top: 30px;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+#close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+#image-details {
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    min-width: 20%;
+    text-align: left;
+}
+
+#title {
+    margin-bottom: 1rem;
+}
+#user-and-time {
+    position: absolute;
+    top: 5px;
+    left: 5px;
 }
 
 /* invisible input */
@@ -149,11 +235,69 @@ form {
     z-index: -1;
 }
 
+.fade-enter-active {
+    transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+
 @media only screen and (min-width: 768px) {
     #imagegrid {
         display: grid;
         /* border: 2px solid red; */
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 15px;
+    }
+
+    #bannerimage {
+        object-fit: cover;
+        max-height: 350px;
+        position: relative;
+        left: 0px;
+        top: -100px;
+    }
+
+    #headline {
+        font-family: "Train One", cursive;
+        text-align: center;
+        font-size: 4.5rem;
+        color: white;
+        position: absolute;
+        z-index: 4;
+        top: 28%;
+        left: 218px;
+    }
+
+    #info-box {
+        width: 85%;
+        height: 85%;
+        padding-left: 2%;
+        padding-top: 2%;
+        padding-bottom: 3%;
+        flex-direction: row;
+    }
+
+    .image-open {
+        padding-top: 0;
+        padding-left: 0;
+        padding-top: 20px;
+        max-width: 70%;
+    }
+    #user-and-time {
+        position: absolute;
+        bottom: 1%;
+        padding-top: 5px;
+        left: 30px;
+    }
+
+    #banner {
+        max-height: 280px;
+    }
+
+    #filename {
+        font-size: 8pt;
+        position: absolute;
+        color: black;
     }
 }

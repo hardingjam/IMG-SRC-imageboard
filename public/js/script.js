@@ -1,5 +1,53 @@
 (function () {
     // ===== ALL OUR VUE CODE GOES IN HURR ===== //
+    Vue.component("image-component", {
+        template: "#image-info", // references the script id
+        props: ["id"],
+        data: function () {
+            return {
+                imageUrl: "",
+                username: "",
+                title: "",
+                description: "",
+                date: "",
+                time: "",
+            };
+        },
+
+        mounted: function () {
+            //happens when component is rendered
+            // the value of doSomething comes from the <component>
+            console.log("props: ", this.id);
+            // axios.get with params "image" + propname
+            axios.get("/image/" + this.id).then((res) => {
+                const {
+                    url,
+                    username,
+                    title,
+                    description,
+                    created_at,
+                } = res.data;
+                console.log(created_at);
+
+                this.imageUrl = url;
+                this.username = username;
+                this.title = title;
+                this.description = description;
+                this.date = created_at.slice(0, 10);
+                this.time = created_at.slice(11, 19);
+            });
+        },
+
+        methods: {
+            closeModal: function () {
+                console.log(
+                    "Clicked to close, emitting an event from the component"
+                );
+                this.$emit("close");
+                // emits a custom event.
+            },
+        },
+    });
 
     new Vue({
         // the method has an object as it's argument
@@ -7,12 +55,12 @@
         // which ELelement will have access to our Vue code.
         data: {
             // ====== ALL MY DATA ===== //
-            name: "Jamie",
             images: [],
             title: "",
             description: "",
             username: "",
             file: null,
+            imageId: null,
         },
 
         mounted: function () {
@@ -36,10 +84,16 @@
 
         methods: {
             // ====== ALL MY FUNCTIONS ===== //
+
             handleChange: function (e) {
                 console.log("handling change!");
-                console.log("file chosen: ", e.target.files[0]);
-                this.file = e.target.files[0];
+                const chosenFile = e.target.files[0];
+                this.file = chosenFile;
+
+                const textField = document.getElementById("filename");
+                textField.innerHTML = chosenFile.name;
+                const icon = document.getElementById("fileicon");
+                icon.classList.add("file-chosen");
             },
             handleClick: function (e) {
                 // formData is for sending FILES to the server
@@ -55,13 +109,38 @@
                     .then((resp) => {
                         this.images.unshift(resp.data);
                         console.log("response! ", resp);
+                        this.clearAll();
                     })
                     .catch((err) => {
                         console.log("err in POST: ", err);
+                        window.alert(
+                            "This image is too large, please choose another."
+                        );
+                        this.clearAll();
                     });
             },
+
+            clearAll: function () {
+                console.log("clearing all!");
+                const inputs = document.querySelectorAll("input");
+                const textField = document.getElementById("filename");
+                textField.innerHTML = "";
+                inputs.forEach((input) => {
+                    input.value = "";
+                });
+                const icon = document.getElementById("fileicon");
+                icon.classList.remove("file-chosen");
+            },
+
+            previewImage: function () {
+                console.log("preview that shit");
+            },
+
+            closePopUp: function () {
+                this.imageId = null;
+            },
+
             // add functions to show the upload form (on mobile).
-            // add functions to show information on hover.
         },
 
         // data is VERY IMPORTANT. It has key-value pairs inside.

@@ -1,5 +1,5 @@
 const express = require("express");
-const { getImages, addImage } = require("./db");
+const { getImages, addImage, getId, getImageInfo } = require("./db");
 const app = express();
 const multer = require("multer");
 const uidSafe = require("uid-safe");
@@ -31,7 +31,7 @@ const uploader = multer({
 });
 
 app.post("/upload", uploader.single("file"), upload, (req, res) => {
-    const { username, title, description } = req.body;
+    const { username, title, description, id } = req.body;
     addImage(s3Url + req.file.filename, username, title, description)
         .then((data) => {
             console.log("successful db entry");
@@ -40,13 +40,12 @@ app.post("/upload", uploader.single("file"), upload, (req, res) => {
                 username: username,
                 title: title,
                 description: description,
+                id: data.rows[0].id,
             });
         })
         .catch((err) => {
             console.log("error in db entry", err);
         });
-    // then
-    // with the data, push it into the images array at the beginning (UNSHIFT)
 });
 
 app.get("/board", (req, res) => {
@@ -54,6 +53,7 @@ app.get("/board", (req, res) => {
 
     getImages()
         .then((data) => {
+            console.log(data.rows);
             res.json(data.rows);
         })
         .catch((err) => {
@@ -63,6 +63,18 @@ app.get("/board", (req, res) => {
     // res.json means we are no longer using res.render
     // res.render is used for rendering templates, in a SPA Vue is the boss.
     // the server is just getting stuff from the database and sending it back to Vue.
+});
+
+app.get("/image/:id", (req, res) => {
+    console.log("req.params", req.params.id);
+    getImageInfo(req.params.id)
+        .then((data) => {
+            // console.log(data.rows[0]);
+            res.json(data.rows[0]);
+        })
+        .catch((err) => {
+            console.log("error in getImageInfo: ", err);
+        });
 });
 
 app.listen(8080, () => console.log("listening on 8080..."));

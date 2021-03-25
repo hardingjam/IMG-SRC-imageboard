@@ -1,4 +1,4 @@
-<ul>
+        <ul>
             <li v-for='city in cities' :key='city.id' @click='myFunction(city.name)'>{{ city.name }}, {{ city.country }}</li>
             <!-- the ":key" property tells vue to optimise its rendering -->
             <!-- it will prevent Vue rendering until it is ready to show accurate data -->
