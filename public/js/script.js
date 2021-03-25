@@ -1,5 +1,39 @@
 (function () {
     // ===== ALL OUR VUE CODE GOES IN HURR ===== //
+    Vue.component("image-component", {
+        template: "#image-info", // references the script id
+        props: ["id"],
+        data: function () {
+            return {
+                name: "Jamie",
+                imageUrl: "",
+                username: "",
+                timestamp: "",
+                title: "",
+                description: "",
+            };
+        },
+
+        mounted: function () {
+            //happens when component is rendered
+            // the value of doSomething comes from the <component>
+            console.log("props: ", this.doSomething);
+            // axios.get with params "image" + propname
+        },
+
+        methods: {
+            closeModal: function () {
+                console.log(
+                    "Clicked to close, emitting an event from the component"
+                );
+                this.$emit("close");
+                // emits a custom event.
+            },
+            changeName: function () {
+                this.name = "Carolina";
+            },
+        },
+    });
 
     new Vue({
         // the method has an object as it's argument
@@ -7,12 +41,13 @@
         // which ELelement will have access to our Vue code.
         data: {
             // ====== ALL MY DATA ===== //
-            name: "Jamie",
             images: [],
             title: "",
             description: "",
             username: "",
             file: null,
+            imageId: null,
+            dynamicProps: "Here's the props from this.data",
         },
 
         mounted: function () {
@@ -60,8 +95,11 @@
                         console.log("err in POST: ", err);
                     });
             },
+            closeMePlease: function () {
+                console.log("closeMePlease fired from parent.methods");
+            },
+
             // add functions to show the upload form (on mobile).
-            // add functions to show information on hover.
         },
 
         // data is VERY IMPORTANT. It has key-value pairs inside.

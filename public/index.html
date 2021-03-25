@@ -4,14 +4,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Train+One&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="/css/styles.css">
-    <title>Views</title>
+    <title>IMG | SRC</title>
 </head>
 <body>
     <div id="banner">
         <img id="bannerimage" src="./images/banner.jpg">
-        <div id="headlinecontainer">
-    <h1 id="headline">IMG SRC</h1>
-    </div>
+       
+            <h1 id="headline">IMG SRC</h1>
+        </div>
     </div>
     <div id="main">
          
@@ -40,15 +40,29 @@
         <!-- This contains our Vue instance -->
         <div id="imagegrid">    
             
-            <div class="card" v-for='image in images' :key='image.id'>
-                <img class="image" :src =image.url>
+            <div class="card" v-for='image in images' :key='image.id' >
+                <img class="image" :src=image.url @click='imageId = image.id'>
                 <div class="info"><p>{{image.title}}</p></div>
             </div>
         </div>
 
+        <image-component v-if="imageId" :id="id"></image-component>
+        <!-- defined in the parent -->
         
-
+        <!-- end of main -->
     </div>
+
+    <script id="image-info" type="text/x-template">
+        <div class='component' >
+            <div id="info-box">
+                <h1>All about your image</h1>
+                <h2>Hello {{name}}</h2>
+                <h2 @click="closeModal">Close!!!</h2>
+            <!-- defined in the methods of the component -->
+            </div> 
+        </div>    
+    </script>
+    
     <script src="/js/vue.js"></script>
     <script src="/js/axios.min.js"></script>
     <script src="/js/script.js"></script>
