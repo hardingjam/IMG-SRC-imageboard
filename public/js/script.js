@@ -5,28 +5,18 @@
         props: ["id"],
         data: function () {
             return {
-<<<<<<< HEAD
                 imageUrl: "",
                 username: "",
                 title: "",
                 description: "",
                 date: "",
                 time: "",
-=======
-                name: "Jamie",
-                imageUrl: "",
-                username: "",
-                timestamp: "",
-                title: "",
-                description: "",
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
             };
         },
 
         mounted: function () {
             //happens when component is rendered
             // the value of doSomething comes from the <component>
-<<<<<<< HEAD
             console.log("props: ", this.id);
             // axios.get with params "image" + propname
             axios.get("/image/" + this.id).then((res) => {
@@ -46,10 +36,6 @@
                 this.date = created_at.slice(0, 10);
                 this.time = created_at.slice(11, 19);
             });
-=======
-            console.log("props: ", this.doSomething);
-            // axios.get with params "image" + propname
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
         },
 
         methods: {
@@ -60,12 +46,6 @@
                 this.$emit("close");
                 // emits a custom event.
             },
-<<<<<<< HEAD
-=======
-            changeName: function () {
-                this.name = "Carolina";
-            },
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
         },
     });
 
@@ -81,10 +61,6 @@
             username: "",
             file: null,
             imageId: null,
-<<<<<<< HEAD
-=======
-            dynamicProps: "Here's the props from this.data",
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
         },
 
         mounted: function () {
@@ -143,7 +119,6 @@
                         this.clearAll();
                     });
             },
-<<<<<<< HEAD
 
             clearAll: function () {
                 console.log("clearing all!");
@@ -163,10 +138,6 @@
 
             closePopUp: function () {
                 this.imageId = null;
-=======
-            closeMePlease: function () {
-                console.log("closeMePlease fired from parent.methods");
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
             },
 
             // add functions to show the upload form (on mobile).

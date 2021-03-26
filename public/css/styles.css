@@ -96,7 +96,6 @@ button,
     max-width: 50px;
     cursor: pointer;
     transition: 400ms;
-<<<<<<< HEAD
     border-radius: 50%;
 }
 
@@ -107,20 +106,15 @@ button,
 
 .close {
     width: 20px;
-=======
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
 }
 
 .icon:hover {
     transform: translateY(-5px);
     transition: 200ms;
-<<<<<<< HEAD
 }
 .sendicon:hover {
     transform: translateY(-5px);
     transition: 200ms;
-=======
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
 }
 
 #browsebutton {
@@ -194,7 +188,6 @@ form {
     color: white;
     background-color: black;
     z-index: 4;
-<<<<<<< HEAD
     flex-direction: column;
 }
 
@@ -229,18 +222,6 @@ form {
     position: absolute;
     top: 5px;
     left: 5px;
-=======
-    top: 45%;
-    left: 90px;
-}
-
-#info-box {
-    width: 300px;
-    height: 300px;
-    border: 2px dotted red;
-    position: absolute;
-    top: 0;
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
 }
 
 /* invisible input */
@@ -287,7 +268,6 @@ form {
         top: 28%;
         left: 218px;
     }
-<<<<<<< HEAD
 
     #info-box {
         width: 85%;
@@ -320,6 +300,4 @@ form {
         position: absolute;
         color: black;
     }
-=======
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
 }

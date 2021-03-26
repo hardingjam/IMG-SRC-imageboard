@@ -26,19 +26,10 @@ module.exports.getId = function () {
     return db.query(query);
 };
 
-<<<<<<< HEAD
 module.exports.getImageInfo = function (id) {
     const query = `SELECT *
                     FROM images
                     WHERE id = $1;`;
     const params = [id];
     return db.query(query, params);
-=======
-module.exports.getImageInfo = function (url) {
-    const query = `SELECT *
-                    FROM images
-                    WHERE url = $1;`;
-    const params = [url];
-    db.query(query, params);
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
 };

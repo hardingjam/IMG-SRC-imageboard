@@ -35,7 +35,6 @@ app.post("/upload", uploader.single("file"), upload, (req, res) => {
     addImage(s3Url + req.file.filename, username, title, description)
         .then((data) => {
             console.log("successful db entry");
-<<<<<<< HEAD
             res.json({
                 url: s3Url + req.file.filename,
                 username: username,
@@ -43,23 +42,6 @@ app.post("/upload", uploader.single("file"), upload, (req, res) => {
                 description: description,
                 id: data.rows[0].id,
             });
-=======
-            getId()
-                // i can get rid of this and just "returning id", in the db.js
-                .then((data) => {
-                    console.log(data);
-                    res.json({
-                        url: s3Url + req.file.filename,
-                        username: username,
-                        title: title,
-                        description: description,
-                        id: data.rows[0].id,
-                    });
-                })
-                .catch((err) => {
-                    console.log("error in selecting id", err);
-                });
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
         })
         .catch((err) => {
             console.log("error in db entry", err);
@@ -84,7 +66,6 @@ app.get("/board", (req, res) => {
 });
 
 app.get("/image/:id", (req, res) => {
-<<<<<<< HEAD
     console.log("req.params", req.params.id);
     getImageInfo(req.params.id)
         .then((data) => {
@@ -94,10 +75,6 @@ app.get("/image/:id", (req, res) => {
         .catch((err) => {
             console.log("error in getImageInfo: ", err);
         });
-=======
-    console.log(req.params);
-    getImageInfo(url);
->>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
 });
 
 app.listen(8080, () => console.log("listening on 8080..."));
