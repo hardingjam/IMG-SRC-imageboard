@@ -1,8 +1,38 @@
 (function () {
     // ===== ALL OUR VUE CODE GOES IN HURR ===== //
+
+    Vue.component("comments-component", {
+        template: "#comments-box",
+        props: ["id"],
+        data: function () {
+            return {
+                comments: [], //already posted
+                username: "", // input fields
+                newComment: "",
+            };
+        },
+        mounted: function () {
+            console.log(this);
+            console.log("Props (comments): ", this.id);
+            axios.get("/comments/" + this.id).then((res) => {
+                console.log(res.data);
+                // this.comments.unshift(res.data);
+            });
+        },
+
+        methods: {
+            postComment: function () {
+                axios.post("/comments", {
+                    comment: this.newComment,
+                    name: this.username,
+                });
+            },
+        },
+    });
+
     Vue.component("image-component", {
         template: "#image-info", // references the script id
-        props: ["id"],
+        props: ["id"], // this is :id in the HTML
         data: function () {
             return {
                 imageUrl: "",
@@ -27,7 +57,6 @@
                     description,
                     created_at,
                 } = res.data;
-                console.log(created_at);
 
                 this.imageUrl = url;
                 this.username = username;
@@ -109,12 +138,20 @@
                     .then((resp) => {
                         this.images.unshift(resp.data);
                         console.log("response! ", resp);
-                        this.clearAll();
+                        //this instance does not work.
+                        this.username = "";
+                        this.title = "";
+                        this.description = "";
+                        document.querySelector('input[type="file"]').value = "";
+                        const icon = document.getElementById("fileicon");
+                        icon.classList.remove("file-chosen");
+                        const textField = document.getElementById("filename");
+                        textField.innerHTML = "";
                     })
                     .catch((err) => {
                         console.log("err in POST: ", err);
                         window.alert(
-                            "This image is too large, please choose another."
+                            "Either no file was selected, or selected file is too large (>2MB). Please choose another."
                         );
                         this.clearAll();
                     });

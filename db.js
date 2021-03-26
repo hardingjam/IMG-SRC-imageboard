@@ -7,7 +7,8 @@ const db = spicedPg(
 
 module.exports.getImages = function () {
     const query = `SELECT * FROM images
-                    ORDER BY id DESC;`;
+                    ORDER BY id DESC
+                    LIMIT 9;`;
     return db.query(query);
 };
 
@@ -31,5 +32,12 @@ module.exports.getImageInfo = function (id) {
                     FROM images
                     WHERE id = $1;`;
     const params = [id];
+    return db.query(query, params);
+};
+
+module.exports.addComment = function (comment, name) {
+    const query = `INSERT INTO comments (comment, username) VALUE ($1, $2)
+                    RETURNING id;`;
+    const params = [comment, name];
     return db.query(query, params);
 };

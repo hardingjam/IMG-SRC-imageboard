@@ -107,8 +107,10 @@ button,
 .close {
     width: 20px;
 }
-
-.icon:hover {
+#bigheadline {
+    color: white;
+}
+#fileicon:hover {
     transform: translateY(-5px);
     transition: 200ms;
 }
@@ -193,7 +195,7 @@ form {
 
 .image-open {
     max-width: 100%;
-    max-height: auto;
+    max-height: 80%;
     object-fit: contain;
     padding-top: 30px;
     padding-left: 2%;
@@ -222,6 +224,13 @@ form {
     position: absolute;
     top: 5px;
     left: 5px;
+}
+
+/* COMMENT FORM COMPONENT */
+
+#comment-form {
+    display: flex;
+    flex-direction: column;
 }
 
 /* invisible input */
@@ -255,7 +264,7 @@ form {
         max-height: 350px;
         position: relative;
         left: 0px;
-        top: -100px;
+        top: -125px;
     }
 
     #headline {

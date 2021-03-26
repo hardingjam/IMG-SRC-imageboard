@@ -1,5 +1,5 @@
 const express = require("express");
-const { getImages, addImage, getId, getImageInfo } = require("./db");
+const { getImages, addImage, getImageInfo, getComments } = require("./db");
 const app = express();
 const multer = require("multer");
 const uidSafe = require("uid-safe");
@@ -35,7 +35,7 @@ app.post("/upload", uploader.single("file"), upload, (req, res) => {
     addImage(s3Url + req.file.filename, username, title, description)
         .then((data) => {
             console.log("successful db entry");
-            res.json({
+            return res.json({
                 url: s3Url + req.file.filename,
                 username: username,
                 title: title,
@@ -71,6 +71,28 @@ app.get("/image/:id", (req, res) => {
         .then((data) => {
             // console.log(data.rows[0]);
             res.json(data.rows[0]);
+        })
+        .catch((err) => {
+            console.log("error in getImageInfo: ", err);
+        });
+});
+
+app.get("/comments/:id", (req, res) => {
+    getComments(req.params.id)
+        .then((data) => {
+            console.log(data.rows);
+            res.json(data.rows);
+        })
+        .catch((err) => {
+            console.log("error in getImageInfo: ", err);
+        });
+});
+
+app.post("/comments", (req, res) => {
+    getComments(req.params.id)
+        .then((data) => {
+            console.log(data.rows);
+            res.json(data.rows);
         })
         .catch((err) => {
             console.log("error in getImageInfo: ", err);
