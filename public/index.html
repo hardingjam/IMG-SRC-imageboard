@@ -45,6 +45,7 @@
             
             <div class="card" v-for='image in images' :key='image.id' >
                 <img class="image" :src=image.url @click='imageId = image.id'>
+<<<<<<< HEAD
                 
             </div>
         </div>
@@ -52,6 +53,14 @@
         <image-component v-if="imageId" :id="imageId" @close="closePopUp"></image-component>
         <!-- defined in the parent -->
         </transition>   
+=======
+                <div class="info"><p>{{image.title}}</p></div>
+            </div>
+        </div>
+
+        <image-component v-if="imageId" :id="id"></image-component>
+        <!-- defined in the parent -->
+>>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
         
         <!-- end of main -->
     </div>
@@ -59,6 +68,7 @@
     <script id="image-info" type="text/x-template">
         <div class='component' >
             <div id="info-box">
+<<<<<<< HEAD
                 <p id = "user-and-time">Added by {{username}} on {{date}} at {{time}}</p>
               
                     <img class="image-open" :src="imageUrl">
@@ -71,6 +81,11 @@
                 <span id="close-button" @click="closeModal">
                     <img class="close" src="./images/close.png">
                 </span>
+=======
+                <h1>All about your image</h1>
+                <h2>Hello {{name}}</h2>
+                <h2 @click="closeModal">Close!!!</h2>
+>>>>>>> 1b2d6431024d24aca4b24b0bf373d609242ed2df
             <!-- defined in the methods of the component -->
             </div> 
         </div>    
