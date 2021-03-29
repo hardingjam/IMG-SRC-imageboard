@@ -114,12 +114,20 @@ app.post("/comment", (req, res) => {
 app.get("/moreimages/:id", (req, res) => {
     console.log("req.params", req.params.id);
     getMoreImages(req.params.id)
-        .then(({ rows }) => {
-            res.json(rows);
+        .then((data) => {
+            console.log(
+                "lowestId from data.rows[0].lowestId",
+                data.rows[0].lowestId
+            );
+            res.json(data.rows);
         })
         .catch((err) => {
             console.log("error in getMoreImages: ", err);
         });
+});
+
+app.get("/replies/:id", (req, res) => {
+    console.log("getting replies!");
 });
 
 app.listen(8080, () => console.log("listening on 8080..."));

@@ -204,6 +204,12 @@ form {
     flex-direction: column;
 }
 
+.comment-open {
+    max-width: 50%;
+    max-height: 50%;
+    background-color: thistle;
+}
+
 .image-open {
     max-width: 100%;
     max-height: 80%;
@@ -240,6 +246,18 @@ form {
 #details-comments {
     display: flex;
     flex-direction: column;
+    max-width: 100%;
+}
+
+#get-more {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+    font-size: 2rem;
+}
+
+#more-button-button {
+    font-size: 2rem;
 }
 
 /* COMMENT FORM COMPONENT */
@@ -275,11 +293,25 @@ form {
     display: flex;
     flex-direction: column;
     text-align: left;
+    background-color: rgb(214, 214, 214);
+    color: black;
+    cursor: pointer;
+}
+
+.comment-text {
+    font-style: italic;
+    margin-left: 5%;
+    margin-top: 2%;
 }
 
 .date-and-time {
     margin-right: 0;
     margin-left: auto;
+    font-size: 0.8rem;
+}
+
+.required {
+    background-color: thistle;
 }
 
 @media only screen and (min-width: 768px) {

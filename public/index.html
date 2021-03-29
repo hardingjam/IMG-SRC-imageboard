@@ -14,7 +14,6 @@
         </div>
     </div>
     <div id="main">
-       <button id="seeMoreImages">Get more images</button>
          
         <div id="upload">
             <form id="upload">
@@ -48,7 +47,6 @@
         </div>
                 
         
-        <!-- This contains our Vue instance -->
         <div id="imagegrid">    
             <div class="card" v-for='image in images' :key='image.id' >
                 <a class = "imagelink" :href = "'#' + image.id">
@@ -56,7 +54,9 @@
                 </a>
             </div>
         </div>
-            
+        <div id = "get-more">
+        <button v-if="moreImagesExist" id="get-more-button">Get more images</button>
+        </div>
         <transition name="fade">
             <image-component v-if="imageId" :id="imageId" @close="closePopUp"></image-component>
             <!-- defined in the parent -->
@@ -81,9 +81,10 @@
                         <img class="close" src="./images/close.png">
                     </span>
             <!-- // COMMENTS COMPONENT \\ -->
-                    <comments-component :id="id"></comments-component> 
+                    <comments-component :id="id">
+                    </comments-component> 
             <!--  child components access the properties of their parent component (not Main) -->
-          
+                    
                 </div>
             </div>
         </div>   
@@ -91,26 +92,34 @@
             
     <script id="comments-box" type="text/x-template">
         <div class="component">
-            <input v-model="username" name="userame" type="text" placeholder="Your Name" required>
-            <input v-model="newComment" name="comment" type="text" palceholder="Tell us what you think..." required>
+            <input id="commenter" v-model="username" name="userame" type="text" placeholder="Your Name" required>
+            <input id="comment-text" v-model="newComment" name="comment" type="text" placeholder="Comment" required>
             <button @click="postComment">Add comment</button>
         <div id="messageboard">
-            <div class="comment" v-for="comment in comments">
+            <div class="comment" v-for="comment in comments" @click="commentId = comment.id">
                 <p>{{comment.username}} says:</p>
                 <p class="comment-text"> {{comment.comment}}</p>
                 <p class="date-and-time">at {{comment.created_at}}</p>
             </div>
-        </div> 
-            
-           
-                <!-- user messages go here -->
-              
-       
-        </div>       
+        </div>
+         <replies-component v-if="commentId" :id="commentId"></replies-component>
+        </div>   
     </script>
-    <!-- the script for the comment box goes here -->
-    <!-- submit button w/ click listener to post comments -->
-    <!-- text fields etc. -->
+    
+    <script id="comment-replies-box" type="text/x-template">
+        <div class="component">
+            <input v-model="username" name="userame" type="text" placeholder="Your Name" required>
+            <input v-model="reply" name="reply" type="text" palceholder="Reply" required>
+            <button @click="postReply">Reply to comment</button>
+        <div id="messageboard">
+            <div class="replies" v-for="reply in replies">
+                <p class="reply-user">{{reply.username}} says:</p>
+                <p class="reply-text"> {{reply.reply}}</p>
+            </div>
+        </div>   
+    </div>
+            
+    </script>
               
             
         

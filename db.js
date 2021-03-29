@@ -35,7 +35,7 @@ module.exports.addComment = function (name, comment, id) {
 };
 
 module.exports.getComments = function (id) {
-    const query = `SELECT username, comment, created_at
+    const query = `SELECT id, username, comment, created_at
                     FROM comments
                     WHERE image_id = ${id}
                     ORDER BY id DESC;`;

@@ -1,6 +1,27 @@
 (function () {
     // ===== ALL OUR VUE CODE GOES IN HURR ===== //
 
+    Vue.component("replies-component", {
+        template: "#comment-replies-box",
+        props: ["commentId"],
+        data: function () {
+            return {
+                replies: [],
+                username: "",
+                reply: "",
+            };
+        },
+        mounted: function () {
+            var self = this;
+            console.log("props", self.commentId);
+            return function () {
+                axios.get("/replies/" + self.commentId).then((res) => {
+                    self.replies = res.data;
+                });
+            };
+        },
+    });
+
     Vue.component("comments-component", {
         template: "#comments-box",
         props: ["id"],
@@ -9,38 +30,65 @@
                 comments: [], //already posted
                 username: "", // input fields
                 newComment: "",
+                commentId: null,
             };
         },
         mounted: function () {
             var self = this;
+            console.log(self.commentId);
             axios.get("/comments/" + self.id).then((res) => {
                 self.comments = res.data;
             });
         },
 
         methods: {
+            checkComment: function () {
+                const commenter = document.getElementById("commenter");
+                const commentText = document.getElementById("comment-text");
+
+                console.log("checking comment");
+
+                if (this.username && this.newComment) {
+                    console.log("comment is valid");
+                    commenter.classList.remove("required");
+                    commentText.classList.remove("required");
+                    return true;
+                }
+
+                if (!this.username) {
+                    commenter.classList.add("required");
+                }
+
+                if (!this.newComment) {
+                    commentText.classList.add("required");
+                }
+            },
+
             postComment: function () {
-                axios
-                    .post("/comment", {
-                        name: this.username,
-                        comment: this.newComment,
-                        id: this.id,
-                    })
-                    .then((res) => {
-                        const { username, comment, created_at } = res.data;
-                        const date = created_at.slice(0, 10);
-                        const time = created_at.slice(11, 19);
-                        const addComment = {
-                            comment: comment,
-                            username: username,
-                            created_at: `${time} on ${date}`,
-                        };
-                        console.log("new comment", addComment);
-                        this.comments.unshift(addComment);
-                    })
-                    .catch((err) => {
-                        console.log("made an error", err);
-                    });
+                if (this.checkComment())
+                    axios
+                        .post("/comment", {
+                            name: this.username,
+                            comment: this.newComment,
+                            id: this.id,
+                        })
+                        .then((res) => {
+                            const { username, comment, created_at } = res.data;
+                            const date = created_at.slice(0, 10);
+                            const time = created_at.slice(11, 19);
+                            const addComment = {
+                                comment: comment,
+                                username: username,
+                                created_at: `${time} on ${date}`,
+                            };
+                            console.log("new comment", addComment);
+                            this.comments.unshift(addComment);
+                            this.username = "";
+                            this.newComment = "";
+                        })
+                        .catch((err) => {
+                            console.log("made an error", err);
+                        });
             },
         },
     });
@@ -62,7 +110,7 @@
         mounted: function () {
             //happens when component is rendered
             // the value of doSomething comes from the <component>
-            console.log("props: ", this.id);
+
             // axios.get with params "image" + propname
             axios.get("/image/" + this.id).then((res) => {
                 const {
@@ -94,7 +142,10 @@
                 console.log(
                     "Clicked to close, emitting an event from the component"
                 );
+                this.activeModal = false;
+                location.hash = "";
                 this.$emit("close");
+
                 // emits a custom event.
             },
         },
@@ -112,7 +163,8 @@
             username: "",
             file: null,
             imageId: null,
-            endOfImages: null,
+            moreImagesExist: true,
+            finalId: null,
             lowestId: null,
             errors: [],
         },
@@ -140,12 +192,11 @@
             });
 
             document
-                .getElementById("seeMoreImages")
+                .getElementById("get-more-button")
                 .addEventListener("click", () => {
                     console.log("clicked for more images");
                     this.getMoreImages();
                 });
-            // there must be a route the matches in the server (back-end)
         },
 
         methods: {
@@ -174,13 +225,17 @@
                 }
             },
 
-            getMoreImages: function (e) {
+            getMoreImages: function () {
                 axios
                     .get("/moreimages/" + this.lowestId)
                     .then((res) => {
-                        console.log(res.data);
-                        this.images.push(res.data);
-                        console.log(this.images);
+                        console.log("res", res);
+                        this.finalId = res.data[0].lowestId;
+                        this.images.push(...res.data);
+                        this.lowestId = res.data[res.data.length - 1].id;
+                        if (this.lowestId == this.finalId) {
+                            this.moreImagesExist = false;
+                        }
                     })
                     .catch((err) => {
                         console.log("error in GET /moreimages", err);
@@ -197,6 +252,7 @@
                 const icon = document.getElementById("fileicon");
                 icon.classList.add("file-chosen");
             },
+
             handleClick: function (e) {
                 // formData is for sending FILES to the server
                 // the other info is optional
@@ -258,8 +314,6 @@
                 this.imageId = null;
                 location.hash = "";
             },
-
-            // add functions to show the upload form (on mobile).
         },
 
         // data is VERY IMPORTANT. It has key-value pairs inside.
