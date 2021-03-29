@@ -12,20 +12,35 @@
             };
         },
         mounted: function () {
-            console.log(this);
-            console.log("Props (comments): ", this.id);
-            axios.get("/comments/" + this.id).then((res) => {
-                console.log(res.data);
-                // this.comments.unshift(res.data);
+            var self = this;
+            axios.get("/comments/" + self.id).then((res) => {
+                self.comments = res.data;
             });
         },
 
         methods: {
             postComment: function () {
-                axios.post("/comments", {
-                    comment: this.newComment,
-                    name: this.username,
-                });
+                axios
+                    .post("/comment", {
+                        name: this.username,
+                        comment: this.newComment,
+                        id: this.id,
+                    })
+                    .then((res) => {
+                        const { username, comment, created_at } = res.data;
+                        const date = created_at.slice(0, 10);
+                        const time = created_at.slice(11, 19);
+                        const addComment = {
+                            comment: comment,
+                            username: username,
+                            created_at: `${time} on ${date}`,
+                        };
+                        console.log("new comment", addComment);
+                        this.comments.unshift(addComment);
+                    })
+                    .catch((err) => {
+                        console.log("made an error", err);
+                    });
             },
         },
     });
@@ -67,6 +82,13 @@
             });
         },
 
+        watch: {
+            // a watcher will watch for any props that change in value
+            id: function () {
+                console.log("id has changed");
+            },
+        },
+
         methods: {
             closeModal: function () {
                 console.log(
@@ -90,12 +112,16 @@
             username: "",
             file: null,
             imageId: null,
+            endOfImages: null,
+            lowestId: null,
+            errors: [],
         },
 
         mounted: function () {
             // ====== HAPPENS AS SOON AS THE PAGE LOADS ===== //
             // this refers to the vue instance
             // it contains the data object from our Vue instance
+
             axios
                 .get("/board")
                 .then((res) => {
@@ -103,16 +129,63 @@
                     // we could also save "this" to a variable before our axios call.
                     console.log("res.data from /board", res.data);
                     this.images = res.data;
+                    this.lowestId = this.images[this.images.length - 1].id;
                     // console.log(this.images);
                 })
                 .catch((err) => {
                     console.log(err);
+                });
+            addEventListener("hashchange", () => {
+                this.imageId = location.hash.slice(1);
+            });
+
+            document
+                .getElementById("seeMoreImages")
+                .addEventListener("click", () => {
+                    console.log("clicked for more images");
+                    this.getMoreImages();
                 });
             // there must be a route the matches in the server (back-end)
         },
 
         methods: {
             // ====== ALL MY FUNCTIONS ===== //
+
+            checkForm: function () {
+                console.log("checking form");
+
+                if (this.title && this.username && this.description) {
+                    this.errors = [];
+                    return true;
+                }
+
+                this.errors = [];
+
+                if (!this.title) {
+                    this.errors.push("Please enter a title");
+                }
+
+                if (!this.description) {
+                    this.errors.push("Please add a description");
+                }
+
+                if (!this.username) {
+                    this.errors.push("Username required");
+                }
+            },
+
+            getMoreImages: function (e) {
+                axios
+                    .get("/moreimages/" + this.lowestId)
+                    .then((res) => {
+                        console.log(res.data);
+                        this.images.push(res.data);
+                        console.log(this.images);
+                    })
+                    .catch((err) => {
+                        console.log("error in GET /moreimages", err);
+                    });
+            },
 
             handleChange: function (e) {
                 console.log("handling change!");
@@ -127,34 +200,41 @@
             handleClick: function (e) {
                 // formData is for sending FILES to the server
                 // the other info is optional
-                var formData = new FormData();
-                formData.append("file", this.file);
-                formData.append("title", this.title);
-                formData.append("description", this.description);
-                formData.append("username", this.username);
+                if (this.checkForm()) {
+                    var formData = new FormData();
+                    formData.append("file", this.file);
+                    formData.append("title", this.title);
+                    formData.append("description", this.description);
+                    formData.append("username", this.username);
 
-                axios
-                    .post("/upload", formData)
-                    .then((resp) => {
-                        this.images.unshift(resp.data);
-                        console.log("response! ", resp);
-                        //this instance does not work.
-                        this.username = "";
-                        this.title = "";
-                        this.description = "";
-                        document.querySelector('input[type="file"]').value = "";
-                        const icon = document.getElementById("fileicon");
-                        icon.classList.remove("file-chosen");
-                        const textField = document.getElementById("filename");
-                        textField.innerHTML = "";
-                    })
-                    .catch((err) => {
-                        console.log("err in POST: ", err);
-                        window.alert(
-                            "Either no file was selected, or selected file is too large (>2MB). Please choose another."
-                        );
-                        this.clearAll();
-                    });
+                    axios
+                        .post("/upload", formData)
+                        .then((resp) => {
+                            this.images.unshift(resp.data);
+                            console.log("response! ", resp);
+                            //this instance does not work.
+                            this.username = "";
+                            this.title = "";
+                            this.description = "";
+                            document.querySelector('input[type="file"]').value =
+                                "";
+                            const icon = document.getElementById("fileicon");
+                            icon.classList.remove("file-chosen");
+                            const textField = document.getElementById(
+                                "filename"
+                            );
+                            textField.innerHTML = "";
+                        })
+                        .catch((err) => {
+                            console.log("err in POST: ", err);
+                            window.alert(
+                                "Either no file was selected, or selected file is too large (>2MB). Please choose another."
+                            );
+                            this.clearAll();
+                        });
+                } else {
+                    console.log(this.errors);
+                }
             },
 
             clearAll: function () {
@@ -167,6 +247,7 @@
                 });
                 const icon = document.getElementById("fileicon");
                 icon.classList.remove("file-chosen");
+                this.errors = [];
             },
 
             previewImage: function () {
@@ -175,6 +256,7 @@
 
             closePopUp: function () {
                 this.imageId = null;
+                location.hash = "";
             },
 
             // add functions to show the upload form (on mobile).

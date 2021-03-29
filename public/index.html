@@ -14,15 +14,22 @@
         </div>
     </div>
     <div id="main">
-       
+       <button id="seeMoreImages">Get more images</button>
          
         <div id="upload">
             <form id="upload">
+                <p v-if="errors.length">
+                    <b>Please correct the following error(s):</b>
+                    <ul>
+                        <li v-for="error in errors">{{ error }}</li>
+                    </ul>
+                </p>
                 <div id="textinputs">
-                    <input v-model='title' type ="text" name='title' placeholder="Title" required>
-            <!-- the value of v-model is linked to the properties in our data object -->
-                    <input v-model='description' type ="text" name='description' placeholder="Description" required>
-                    <input v-model='username' type ="text" name ='username' placeholder="Your Name" required>
+                    <input v-model='title' type ="text" name='title' placeholder="Title" >
+                    <!-- the value of v-model is linked to the properties in our data object -->
+                    <input v-model='description' type ="text" name='description' placeholder="Description" >
+                    <input v-model='username' type ="text" name ='username' placeholder="Your Name" >
+
                 </div>
                 <div id="fileinput">
                 
@@ -35,28 +42,31 @@
                 </div>
             <!-- When there is a change in the file input field, run the function handleChange from out data -->
                 </div>
-            <button @click.prevent='handleClick'><img class="sendicon" src="./images/send.png"></button>
-            
-            <!-- click.prevent is the equivalent of e.preventDefault() -->
+                <button id="send-button" @click='checkForm' @click.prevent='handleClick'><img class="sendicon" src="./images/send.png"></button>
+                <!-- click.prevent is the equivalent of e.preventDefault() -->
             </form>
         </div>
+                
+        
         <!-- This contains our Vue instance -->
         <div id="imagegrid">    
-            
             <div class="card" v-for='image in images' :key='image.id' >
-            <img class="image" :src=image.url @click='imageId = image.id'>
-                
+                <a class = "imagelink" :href = "'#' + image.id">
+                    <img class="image" :src=image.url>
+                </a>
+            </div>
         </div>
-        </div>
+            
         <transition name="fade">
-        <image-component v-if="imageId" :id="imageId" @close="closePopUp"></image-component>
-      
-        <!-- defined in the parent -->
+            <image-component v-if="imageId" :id="imageId" @close="closePopUp"></image-component>
+            <!-- defined in the parent -->
         </transition>   
         
         <!-- end of main -->
     </div>
-
+                
+        
+        
     <script id="image-info" type="text/x-template">
     <div class='component' >   
         <div id="info-box">
@@ -73,9 +83,7 @@
             <!-- // COMMENTS COMPONENT \\ -->
                     <comments-component :id="id"></comments-component> 
             <!--  child components access the properties of their parent component (not Main) -->
-                    <div id="messageboard">
-                <!-- user messages go here -->
-                    </div> 
+          
                 </div>
             </div>
         </div>   
@@ -83,13 +91,21 @@
             
     <script id="comments-box" type="text/x-template">
         <div class="component">
-            <div id="comment-form">
-                <form method="POST">
-                    <input type="text" placeholder="Your Name">
-                    <input type="text" palceholder="Tell us what you think...">
-                    <button type="submit">Add comment</button>
-                </form>
-            </div>  
+            <input v-model="username" name="userame" type="text" placeholder="Your Name" required>
+            <input v-model="newComment" name="comment" type="text" palceholder="Tell us what you think..." required>
+            <button @click="postComment">Add comment</button>
+        <div id="messageboard">
+            <div class="comment" v-for="comment in comments">
+                <p>{{comment.username}} says:</p>
+                <p class="comment-text"> {{comment.comment}}</p>
+                <p class="date-and-time">at {{comment.created_at}}</p>
+            </div>
+        </div> 
+            
+           
+                <!-- user messages go here -->
+              
+       
         </div>       
     </script>
     <!-- the script for the comment box goes here -->

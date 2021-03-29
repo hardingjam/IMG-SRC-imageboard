@@ -11,6 +11,7 @@ body {
     flex-direction: column;
     justify-content: center;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 #main {
@@ -60,6 +61,16 @@ body {
     object-fit: cover;
     border: 1px solid white;
     border-radius: 5px;
+    display: block;
+}
+
+.imagelink {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border: 1px solid white;
+    border-radius: 5px;
+    display: flex;
 }
 
 ul {
@@ -73,8 +84,8 @@ ul {
     width: 33%;
 }
 
-button,
-#choosefile {
+#choosefile,
+#send-button {
     border-radius: 30px;
     padding: 10px;
     font-size: 3.5rem;
@@ -226,6 +237,11 @@ form {
     left: 5px;
 }
 
+#details-comments {
+    display: flex;
+    flex-direction: column;
+}
+
 /* COMMENT FORM COMPONENT */
 
 #comment-form {
@@ -249,6 +265,21 @@ form {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+}
+
+.comment {
+    columns: 2;
+    border-radius: 2px;
+    margin: 5px;
+    border: 2px solid white;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.date-and-time {
+    margin-right: 0;
+    margin-left: auto;
 }
 
 @media only screen and (min-width: 768px) {

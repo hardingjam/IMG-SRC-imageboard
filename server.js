@@ -1,5 +1,12 @@
 const express = require("express");
-const { getImages, addImage, getImageInfo, getComments } = require("./db");
+const {
+    getImages,
+    addImage,
+    getImageInfo,
+    getComments,
+    addComment,
+    getMoreImages,
+} = require("./db");
 const app = express();
 const multer = require("multer");
 const uidSafe = require("uid-safe");
@@ -8,6 +15,14 @@ const { upload } = require("./s3");
 const { DataBrew } = require("aws-sdk");
 const { s3Url } = require("./config");
 const { nextTick } = require("process");
+
+app.use(
+    // express.urlencoded({
+    //     extended: false,
+    // })
+
+    express.json()
+);
 
 app.use(express.static("./public"));
 
@@ -53,7 +68,6 @@ app.get("/board", (req, res) => {
 
     getImages()
         .then((data) => {
-            console.log(data.rows);
             res.json(data.rows);
         })
         .catch((err) => {
@@ -66,7 +80,6 @@ app.get("/board", (req, res) => {
 });
 
 app.get("/image/:id", (req, res) => {
-    console.log("req.params", req.params.id);
     getImageInfo(req.params.id)
         .then((data) => {
             // console.log(data.rows[0]);
@@ -80,7 +93,6 @@ app.get("/image/:id", (req, res) => {
 app.get("/comments/:id", (req, res) => {
     getComments(req.params.id)
         .then((data) => {
-            console.log(data.rows);
             res.json(data.rows);
         })
         .catch((err) => {
@@ -88,14 +100,25 @@ app.get("/comments/:id", (req, res) => {
         });
 });
 
-app.post("/comments", (req, res) => {
-    getComments(req.params.id)
-        .then((data) => {
-            console.log(data.rows);
-            res.json(data.rows);
+app.post("/comment", (req, res) => {
+    const { name, comment, id } = req.body;
+    addComment(name, comment, id)
+        .then(({ rows }) => {
+            res.json(rows[0]);
         })
         .catch((err) => {
-            console.log("error in getImageInfo: ", err);
+            console.log("error in comment POST", err);
+        });
+});
+
+app.get("/moreimages/:id", (req, res) => {
+    console.log("req.params", req.params.id);
+    getMoreImages(req.params.id)
+        .then(({ rows }) => {
+            res.json(rows);
+        })
+        .catch((err) => {
+            console.log("error in getMoreImages: ", err);
         });
 });
 
