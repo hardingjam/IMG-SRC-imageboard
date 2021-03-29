@@ -92,33 +92,40 @@
             
     <script id="comments-box" type="text/x-template">
         <div class="component">
-            <input id="commenter" v-model="username" name="userame" type="text" placeholder="Your Name" required>
-            <input id="comment-text" v-model="newComment" name="comment" type="text" placeholder="Comment" required>
-            <button @click="postComment">Add comment</button>
-        <div id="messageboard">
+            <div id="comments">
+                <div id="comment-form">
+                    <input id="commenter" v-model="username" name="userame" type="text" placeholder="Your Name" required>
+                    <input id="comment-text" v-model="newComment" name="comment" type="text" placeholder="Comment" required>
+                    <button @click="postComment">Add comment</button>
+                </div>
+            <div id="messageboard">
             <div class="comment" v-for="comment in comments" @click="commentId = comment.id">
                 <p>{{comment.username}} says:</p>
                 <p class="comment-text"> {{comment.comment}}</p>
                 <p class="date-and-time">at {{comment.created_at}}</p>
+                
             </div>
         </div>
-         <replies-component v-if="commentId" :id="commentId"></replies-component>
-        </div>   
-    </script>
+    </div>
+    <replies-component v-if="commentId" :comment-id="commentId" @close="closeReplies"></replies-component>
+</div>   
+</script>
     
     <script id="comment-replies-box" type="text/x-template">
         <div class="component">
-            <input v-model="username" name="userame" type="text" placeholder="Your Name" required>
-            <input v-model="reply" name="reply" type="text" palceholder="Reply" required>
-            <button @click="postReply">Reply to comment</button>
-        <div id="messageboard">
-            <div class="replies" v-for="reply in replies">
-                <p class="reply-user">{{reply.username}} says:</p>
-                <p class="reply-text"> {{reply.reply}}</p>
+            <div id="messageboard"  class="comment-reply">
+                <div id = "single-reply" cols="2" v-for="reply in replies">
+                    <p class="reply-user">{{reply.username}}:</p>
+                    <p class="reply-text"> {{reply.reply}}</p>
+                </div>
+            </div>   
+                <div id="reply-form">
+                <input id ="replier" v-model="username" name="userame" type="text" placeholder="Your Name" required>
+                <input id ="reply-text" v-model="reply" name="reply" type="text" palceholder="Reply" required>
+                <button @click="postReply">Reply to comment</button> <button @click ="closeThread">Close Thread</button>
+                </div>
             </div>
-        </div>   
-    </div>
-            
+        </div>    
     </script>
               
             

@@ -6,6 +6,8 @@ const {
     getComments,
     addComment,
     getMoreImages,
+    getThread,
+    addReply,
 } = require("./db");
 const app = express();
 const multer = require("multer");
@@ -128,6 +130,25 @@ app.get("/moreimages/:id", (req, res) => {
 
 app.get("/replies/:id", (req, res) => {
     console.log("getting replies!");
+    getThread(req.params.id)
+        .then((data) => {
+            res.json(data.rows);
+        })
+        .catch((err) => {
+            console.log("error getting thread: ", err);
+        });
+});
+
+app.post("/replies/", (req, res) => {
+    console.log("posting reply");
+    const { reply, username, commentId } = req.body;
+    addReply(reply, username, commentId)
+        .then((data) => {
+            res.json(data.rows[0]);
+        })
+        .catch((err) => {
+            console.log("error in addreply");
+        });
 });
 
 app.listen(8080, () => console.log("listening on 8080..."));

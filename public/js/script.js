@@ -3,6 +3,7 @@
 
     Vue.component("replies-component", {
         template: "#comment-replies-box",
+        // this value will be whatever :comment-id is in the comment component
         props: ["commentId"],
         data: function () {
             return {
@@ -13,12 +14,63 @@
         },
         mounted: function () {
             var self = this;
-            console.log("props", self.commentId);
-            return function () {
-                axios.get("/replies/" + self.commentId).then((res) => {
+            axios
+                .get("/replies/" + self.commentId)
+                .then((res) => {
                     self.replies = res.data;
+                    console.log("got thread");
+                    console.log(self.replies);
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
-            };
+        },
+        methods: {
+            postReply: function () {
+                var self = this;
+                axios
+                    .post("/replies/", {
+                        reply: self.reply,
+                        username: self.username,
+                        commentId: self.commentId,
+                    })
+                    .then((res) => {
+                        const { username, reply } = res.data;
+                        const newReply = {
+                            username: username,
+                            reply: reply,
+                        };
+                        console.log(newReply);
+                        self.username = "";
+                        self.reply = "";
+                        self.replies.push(newReply);
+                    });
+            },
+            closeThread: function () {
+                this.username = "";
+                this.reply = "";
+                console.log("Clicked to close thread");
+                this.$emit("close");
+            },
+
+            checkReply: function () {
+                const replier = document.getElementById("replier");
+                const replyText = document.getElementById("reply-text");
+
+                if (this.username && this.newComment) {
+                    replier.classList.remove("required");
+                    replyText.classList.remove("required");
+                    return true;
+                }
+
+                if (!this.username) {
+                    replier.classList.add("required");
+                }
+
+                if (!this.reply) {
+                    replyText.classList.add("required");
+                }
+            },
         },
     });
 
@@ -90,6 +142,10 @@
                             console.log("made an error", err);
                         });
             },
+
+            closeReplies: function () {
+                this.commentId = null;
+            },
         },
     });
 
@@ -145,8 +201,10 @@
                 this.activeModal = false;
                 location.hash = "";
                 this.$emit("close");
-
-                // emits a custom event.
+            },
+            // emits a custom event.
+            closePopUp: function () {
+                this.commentId = null;
             },
         },
     });

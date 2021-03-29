@@ -230,7 +230,7 @@ form {
     padding: 2%;
     display: flex;
     flex-direction: column;
-    min-width: 20%;
+    min-width: 90%;
     text-align: left;
 }
 
@@ -265,6 +265,10 @@ form {
 #comment-form {
     display: flex;
     flex-direction: column;
+    padding: 10px;
+    min-height: 100px;
+    min-width: 200px;
+    justify-content: space-between;
 }
 
 /* invisible input */
@@ -293,7 +297,7 @@ form {
     display: flex;
     flex-direction: column;
     text-align: left;
-    background-color: rgb(214, 214, 214);
+    background-color: #a0c4ff;
     color: black;
     cursor: pointer;
 }
@@ -312,6 +316,43 @@ form {
 
 .required {
     background-color: thistle;
+}
+
+.selectedComment {
+    background-color: wheat;
+}
+
+#single-reply {
+    display: flex;
+    justify-content: right;
+}
+
+.reply-text {
+    margin-left: 2%;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.reply-user {
+    color: darkblue;
+    font-size: 0.8rem;
+}
+
+#reply-form {
+    padding: 5px;
+}
+
+.comment-reply {
+    background: #a0c4ff;
+    border-radius: 2px;
+    margin: 5px;
+    margin-left: 50%;
+    border: 2px solid white;
+    display: flex;
+    flex-direction: column;
+    background-color: #a0c4ff;
+    color: black;
+    justify-content: right;
 }
 
 @media only screen and (min-width: 768px) {
@@ -348,6 +389,7 @@ form {
         padding-top: 2%;
         padding-bottom: 3%;
         flex-direction: row;
+        justify-content: space-around;
     }
 
     .image-open {

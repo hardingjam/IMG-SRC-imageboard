@@ -54,3 +54,21 @@ module.exports.getMoreImages = function (id) {
     const params = [id];
     return db.query(query, params);
 };
+
+module.exports.getThread = function (commentId) {
+    const query = `SELECT username, reply, (
+                SELECT comment FROM comments
+                WHERE id = $1) AS "originalComment" 
+                FROM replies
+                WHERE comment_id = $1;`;
+    const params = [commentId];
+    return db.query(query, params);
+};
+
+module.exports.addReply = function (reply, username, commentId) {
+    const query = `INSERT INTO replies (reply, username, comment_id)
+                    VALUES ($1, $2, $3)
+                    returning reply, username, comment_id;`;
+    const params = [reply, username, commentId];
+    return db.query(query, params);
+};
