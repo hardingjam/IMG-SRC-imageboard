@@ -4,7 +4,7 @@
     Vue.component("replies-component", {
         template: "#comment-replies-box",
         // this value will be whatever :comment-id is in the comment component
-        props: ["commentId"],
+        props: ["commentId", "commenter"],
         data: function () {
             return {
                 replies: [],
@@ -14,12 +14,13 @@
         },
         mounted: function () {
             var self = this;
+
+            console.log("self.commenter: ", self.commenter);
+
             axios
                 .get("/replies/" + self.commentId)
                 .then((res) => {
                     self.replies = res.data;
-                    console.log("got thread");
-                    console.log(self.replies);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -27,24 +28,29 @@
         },
         methods: {
             postReply: function () {
-                var self = this;
-                axios
-                    .post("/replies/", {
-                        reply: self.reply,
-                        username: self.username,
-                        commentId: self.commentId,
-                    })
-                    .then((res) => {
-                        const { username, reply } = res.data;
-                        const newReply = {
-                            username: username,
-                            reply: reply,
-                        };
-                        console.log(newReply);
-                        self.username = "";
-                        self.reply = "";
-                        self.replies.push(newReply);
-                    });
+                if (this.checkReply()) {
+                    var self = this;
+                    axios
+                        .post("/replies/", {
+                            reply: self.reply,
+                            username: self.username,
+                            commentId: self.commentId,
+                        })
+                        .then((res) => {
+                            const { username, reply } = res.data;
+                            const newReply = {
+                                username: username,
+                                reply: reply,
+                            };
+                            console.log(newReply);
+                            self.username = "";
+                            self.reply = "";
+                            self.replies.push(newReply);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                }
             },
             closeThread: function () {
                 this.username = "";
@@ -57,7 +63,7 @@
                 const replier = document.getElementById("replier");
                 const replyText = document.getElementById("reply-text");
 
-                if (this.username && this.newComment) {
+                if (this.username && this.reply) {
                     replier.classList.remove("required");
                     replyText.classList.remove("required");
                     return true;
@@ -83,13 +89,30 @@
                 username: "", // input fields
                 newComment: "",
                 commentId: null,
+                commenter: null,
             };
         },
         mounted: function () {
             var self = this;
-            console.log(self.commentId);
             axios.get("/comments/" + self.id).then((res) => {
-                self.comments = res.data;
+                const loadComments = [];
+                res.data.forEach((element) => {
+                    const { username, comment, created_at, id } = element;
+                    const date = created_at.slice(0, 10);
+                    const time = created_at.slice(11, 19);
+                    const addComment = {
+                        comment: comment,
+                        username: username,
+                        created_at: `${time} on ${date}`,
+                        id: id,
+                    };
+
+                    loadComments.push(addComment);
+                    self.username = "";
+                    self.newComment = "";
+                });
+
+                self.comments = loadComments;
             });
         },
 
@@ -97,9 +120,6 @@
             checkComment: function () {
                 const commenter = document.getElementById("commenter");
                 const commentText = document.getElementById("comment-text");
-
-                console.log("checking comment");
-
                 if (this.username && this.newComment) {
                     console.log("comment is valid");
                     commenter.classList.remove("required");
@@ -125,13 +145,19 @@
                             id: this.id,
                         })
                         .then((res) => {
-                            const { username, comment, created_at } = res.data;
+                            const {
+                                username,
+                                comment,
+                                created_at,
+                                id,
+                            } = res.data;
                             const date = created_at.slice(0, 10);
                             const time = created_at.slice(11, 19);
                             const addComment = {
                                 comment: comment,
                                 username: username,
                                 created_at: `${time} on ${date}`,
+                                id: id,
                             };
                             console.log("new comment", addComment);
                             this.comments.unshift(addComment);
@@ -145,6 +171,16 @@
 
             closeReplies: function () {
                 this.commentId = null;
+            },
+
+            clickHandler: function (id, user) {
+                if (this.commentId == null) {
+                    this.commentId = id;
+                    this.commenter = user;
+                } else {
+                    this.commentId = null;
+                    this.commenter = null;
+                }
             },
         },
     });

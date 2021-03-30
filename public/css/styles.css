@@ -4,7 +4,7 @@
 }
 
 body {
-    background-color: white;
+    background-color: #f1faee;
     color: black;
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
@@ -17,6 +17,25 @@ body {
 #main {
     margin-left: 10%;
     margin-right: 10%;
+}
+
+input {
+    border: none;
+    margin-bottom: 10px;
+    height: 2rem;
+    font-size: 0.8rem;
+    padding-left: 5px;
+    border-radius: 10px;
+    background-color: #f1faee;
+}
+
+button {
+    border: none;
+    font-size: 0.8rem;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #c1fdff;
+    cursor: pointer;
 }
 
 #imagegrid {
@@ -89,7 +108,7 @@ ul {
     border-radius: 30px;
     padding: 10px;
     font-size: 3.5rem;
-    background-color: white;
+    background-color: #f1faee;
     border: none;
 }
 
@@ -138,7 +157,7 @@ ul {
 
 #textinputs > input {
     margin: 5px;
-    background-color: white;
+    background-color: #a8dadc;
     border-radius: 5px;
     color: black;
     font-size: 1rem;
@@ -199,7 +218,7 @@ form {
     transform: translate(-50%, -50%);
     text-align: center;
     color: white;
-    background-color: black;
+    background-color: #325c97;
     z-index: 4;
     flex-direction: column;
 }
@@ -247,6 +266,7 @@ form {
     display: flex;
     flex-direction: column;
     max-width: 100%;
+    min-width: 40%;
 }
 
 #get-more {
@@ -256,8 +276,11 @@ form {
     font-size: 2rem;
 }
 
-#more-button-button {
-    font-size: 2rem;
+#get-more-button {
+    font-size: 1.5rem;
+    padding: 12px;
+    margin: 10px;
+    background-color: #a8dadc;
 }
 
 /* COMMENT FORM COMPONENT */
@@ -291,15 +314,20 @@ form {
 
 .comment {
     columns: 2;
-    border-radius: 2px;
-    margin: 5px;
+    border-radius: 5px;
+    margin: 10px;
     border: 2px solid white;
     display: flex;
     flex-direction: column;
     text-align: left;
-    background-color: #a0c4ff;
+    background-color: #f1faee;
     color: black;
     cursor: pointer;
+}
+
+#comment-button {
+    max-width: 30%;
+    align-self: center;
 }
 
 .comment-text {
@@ -318,6 +346,14 @@ form {
     background-color: thistle;
 }
 
+.replyingTo {
+    font-size: 0.8rem;
+    margin-left: 5px;
+    display: flex;
+    justify-content: left;
+    color: red;
+}
+
 .selectedComment {
     background-color: wheat;
 }
@@ -325,12 +361,15 @@ form {
 #single-reply {
     display: flex;
     justify-content: right;
+    padding-right: 5px;
+    padding-top: 2px;
 }
 
 .reply-text {
-    margin-left: 2%;
+    margin-left: 2px;
     font-size: 0.8rem;
     margin-bottom: 5px;
+    text-align: left;
 }
 
 .reply-user {
@@ -340,17 +379,25 @@ form {
 
 #reply-form {
     padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+#reply-form > button {
+    max-width: 50%;
+    align-self: center;
+    min-width: 30%;
+    margin-bottom: 10px;
 }
 
 .comment-reply {
-    background: #a0c4ff;
-    border-radius: 2px;
-    margin: 5px;
+    background-color: #f1faee;
+    border-radius: 5px;
+    margin: 10px;
     margin-left: 50%;
-    border: 2px solid white;
     display: flex;
     flex-direction: column;
-    background-color: #a0c4ff;
+    background-color: #a8dadc;
     color: black;
     justify-content: right;
 }
@@ -382,6 +429,24 @@ form {
         left: 218px;
     }
 
+    #errors {
+        position: absolute;
+        left: 20%;
+        top: 300px;
+        font-size: 0.8rem;
+        background-color: grey;
+        border-radius: 10px;
+        transition: 200ms;
+    }
+    ul {
+        list-style-type: none;
+    }
+
+    .error {
+        padding: 5px;
+        color: white;
+    }
+
     #info-box {
         width: 85%;
         height: 85%;
@@ -390,13 +455,15 @@ form {
         padding-bottom: 3%;
         flex-direction: row;
         justify-content: space-around;
+        border-radius: 20px;
+        border: 5px solid white;
     }
 
     .image-open {
         padding-top: 0;
         padding-left: 0;
         padding-top: 20px;
-        max-width: 70%;
+        max-width: 60%;
     }
     #user-and-time {
         position: absolute;

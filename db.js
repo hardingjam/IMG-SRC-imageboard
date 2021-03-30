@@ -57,8 +57,8 @@ module.exports.getMoreImages = function (id) {
 
 module.exports.getThread = function (commentId) {
     const query = `SELECT username, reply, (
-                SELECT comment FROM comments
-                WHERE id = $1) AS "originalComment" 
+                SELECT username FROM comments
+                WHERE id = $1) AS "commenter" 
                 FROM replies
                 WHERE comment_id = $1;`;
     const params = [commentId];

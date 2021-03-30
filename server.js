@@ -132,6 +132,7 @@ app.get("/replies/:id", (req, res) => {
     console.log("getting replies!");
     getThread(req.params.id)
         .then((data) => {
+            console.log(data.rows);
             res.json(data.rows);
         })
         .catch((err) => {
